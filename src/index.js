@@ -36,10 +36,10 @@ function showBreeds(breeds) {
   });
 };
 
-function sortBreeds(letter){
+function sortBreeds(){
   let selectDropdown = document.querySelector("#breed-dropdown");
   selectDropdown.addEventListener("change", function (event) {
-    showBreeds(breeds.filter(function breed(letter) {
+    showBreeds(breeds.filter(function breed() {
       breed(event.target.value)
     }))
   });
