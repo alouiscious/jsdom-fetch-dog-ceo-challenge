@@ -4,37 +4,64 @@ console.log('%c HI', 'color: firebrick')
 
 document.addEventListener("DOMContentLoaded", function(){
   fetchBreedImgs();
+  // WHAT THE DIFFERENCE IN CALLING FUNCS HERE OR IN THE FETCH (E.G. SCOPE placeImg();)
   fetchAllBreeds();
+
 })
 
+// loads all breeds listed in api
 function fetchAllBreeds() {
-  const breedUrl = 'https://dog.ceo/api/breeds/list/all'
+  let breedUrl = 'https://dog.ceo/api/breeds/list/all'
   fetch(breedUrl)
   .then(resp => resp.json())
-  .then(json => Object.keys(json.message));
+  .then(json => {
+    breeds = Object.keys(json.message)
+    showBreeds(breeds);
+    sortBreeds();
+  });
 }
-// let breeds = Object.keys(json.message);
 
-function listBreed(breeds) {
-  const breedUl = document.querySelector("ul#dog-breeds")
-  const breedLi = document.createElement("li")
-  breedLi.innerHTML = `<li>Hello ${breeds}</li>`
-  breedUl.appendChild("breedLi")
-}
+
+function showBreeds(breeds) {
+  let breedUl = document.querySelector("#dog-breeds");
+  breeds.forEach(breed => {
+    breedUl.insertAdjacentHTML("beforeend", `<li id="breedLi">${breed}</li>`);
+  });
+
+  document.addEventListener("click", function (event) {
+    if (event.target.matches("#breedLi")) {
+      event.target.style.color = "firebrick";
+      event.target.style.text = "strong";
+    }
+  });
+};
+
+function sortBreeds(letter){
+  let selectDropdown = document.querySelector("#breed-dropdown");
+  selectDropdown.addEventListener("change", function (event) {
+    showBreeds(breeds.filter(function breed(letter) {
+      breed(event.target.value)
+    }))
+  });
+
+};
+
+
 
 function fetchBreedImgs() {
   const imgUrl = "https://dog.ceo/api/breeds/image/random/4"
   fetch(imgUrl)
   .then(resp => resp.json())
-  .then(json => json.message.forEach(img => placeImg(img)));
-}
+  .then(resp => {
+    resp.message.forEach(img => placeImg(img))
+  });
+};
 
-
-function placeImg(img) {
-  const allImgs = document.querySelector("#dog-image-container");
-  const breedImgs = document.createElement('img');
-  breedImgs.innerHTML = `<img src="${img}"><br>`
-  allImgs.appendChild(breedImgs);
-
-}
-
+function placeImg(breedImgUrl) {
+  let allBreedImgs = document.querySelector("#dog-image-container");
+  let breedImg = document.createElement('img');
+  // for image url access
+  breedImg.src = breedImgUrl;
+  // NOT breedImg.innerHTML = `<img src="${img}" width="200"></img>`;
+  allBreedImgs.appendChild(breedImg);
+}; 
