@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function(){
   fetchBreedImgs();
   // WHAT THE DIFFERENCE IN CALLING FUNCS HERE OR IN THE FETCH (E.G. SCOPE placeImg();)
   fetchAllBreeds();
-
+  
 })
 
 // loads all breeds listed in api
@@ -27,24 +27,28 @@ function showBreeds(breeds) {
   breeds.forEach(breed => {
     breedUl.insertAdjacentHTML("beforeend", `<li id="breedLi">${breed}</li>`);
   });
-
+  
   document.addEventListener("click", function (event) {
     if (event.target.matches("#breedLi")) {
       event.target.style.color = "firebrick";
       event.target.style.text = "strong";
     }
   });
+
 };
 
 function sortBreeds(){
-  let selectDropdown = document.querySelector("#breed-dropdown");
-  selectDropdown.addEventListener("change", function (event) {
-    showBreeds(breeds.filter(function breed() {
-      breed(event.target.value)
-    }))
+    let selectDropdown = document.querySelector("#breed-dropdown");
+    selectDropdown.addEventListener("change", function (event) {
+    let breedUl = document.querySelector("#dog-breeds");
+    while(breedUl.querySelector("#breedLi")) {
+      breedUl.removeChild(breedUl.querySelector("#breedLi"));
+    }
+    showBreeds(breeds.filter(breed => breed[0]===event.target.value));
   });
 
 };
+
 
 
 
